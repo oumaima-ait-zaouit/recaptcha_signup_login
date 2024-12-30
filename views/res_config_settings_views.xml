@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_recaptcha" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.recaptcha</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+          <field name="arch" type="xml">
+            <xpath expr="//div[@id='languages']" position="after">
+                <div id="recaptcha_settings" position="before">
+                    <h2 modifiers="{}">
+                      Recaptcha
+                    </h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="secret_key"/>
+                                <field name="secret_key"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <label for="site_key"/>
+                                <field name="site_key"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
