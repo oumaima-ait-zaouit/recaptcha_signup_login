@@ -29,16 +29,27 @@
         }
 
         function onLoadCallBack () {
-            grecaptcha.render('divrecaplog', {
-              sitekey:'6Lci9qgqAAAAAFOahr1f9X_g17hQBZS6dMPdURbk',
-              callback: successCallback,
-              'expired-callback': expiredRecaptchaCallback,
+          fetch('/get_site_key')
+            .then(function(response) {
+              return response.json();
+            })
+
+            .then(function(data) {
+              grecaptcha.render('divrecaplog', {
+                  sitekey: data.sitekey,
+                  callback: successCallback,
+                  'expired-callback': expiredRecaptchaCallback,
+              });
+
+              const submitButton = document.querySelector('button[type="submit"]');
+              if (submitButton) {
+                  submitButton.disabled = true;
+              }
             });
 
-            const submitButton = document.querySelector('button[type="submit"]');
-            if (submitButton) {
-                submitButton.disabled = true;
-            }
+            .catch(function(error) {
+                console.error('Error fetching site key:', error);
+            });
         }
         window.onLoadCallBack = onLoadCallBack;
       </script>
