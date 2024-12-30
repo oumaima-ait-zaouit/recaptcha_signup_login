@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!--log in page-->
+  <template id="login" inherit_id="web.login" name="Login Inherit">
+    <div class="form-group field-password" position="after">
+      <script>
+        function successCallback(token) {
+          console.log('reCAPTCHA Token:', token);
+          const submitButton = document.querySelector('button[type="submit"]');
+          if (submitButton) {
+              submitButton.disabled = false;
+          }
+          const recaptchaResponse = document.getElementById('g-recaptcha-response');
+          if (recaptchaResponse) {
+              recaptchaResponse.value = token;
+          }
+        }
+
+        function expiredRecaptchaCallback() {
+          console.log('reCAPTCHA token expired'); 
+          const submitButton = document.querySelector('button[type="submit"]');
+          if (submitButton) {
+              submitButton.disabled = true;
+          }
+          const recaptchaResponse = document.getElementById('g-recaptcha-response');
+          if (recaptchaResponse) {
+              recaptchaResponse.value = '';
+          }
+        }
+
+        function onLoadCallBack () {
+            grecaptcha.render('divrecaplog', {
+              sitekey:'6Lci9qgqAAAAAFOahr1f9X_g17hQBZS6dMPdURbk',
+              callback: successCallback,
+              'expired-callback': expiredRecaptchaCallback,
+            });
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+        }
+        window.onLoadCallBack = onLoadCallBack;
+      </script>
+
+      <script src="https://www.google.com/recaptcha/api.js?onload=onLoadCallBack&amp;render=explicit"></script>
+      <div id ="captcha" class="imageContainer">
+        <div class="form-group">
+          <div id="divrecaplog" class="g-recaptcha" data-callback="successCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+          <input class="form-control d-none" type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
+          <div class="help-block with-errors" id="err" style='color: red'></div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <!-- sign up page-->
+  <!-- <template id="signup" inherit_id="auth_signup.fields" name="Signup Inherit">
+    <xpath expr="//div[@class='form-group field-confirm_password']" position="after">
+      <script>
+        function successCallback(token) {
+          console.log('reCAPTCHA Token:', token); 
+          const submitButton = document.querySelector('button[type="submit"]');
+          if (submitButton) {
+              submitButton.disabled = false;
+          }
+          const recaptchaResponse = document.getElementById('g-recaptcha-response');
+          if (recaptchaResponse) {
+              recaptchaResponse.value = token;
+          }
+        }
+
+        function expiredRecaptchaCallback() {
+          console.log('reCAPTCHA token expired');
+          const submitButton = document.querySelector('button[type="submit"]');
+          if (submitButton) {
+              submitButton.disabled = true;
+          }
+          const recaptchaResponse = document.getElementById('g-recaptcha-response');
+          if (recaptchaResponse) {
+              recaptchaResponse.value = '';
+          }
+        }
+
+        function onLoadCallBack () {
+            grecaptcha.render('divrecapsign', {
+              sitekey:'6Le5nMQUAAAAALpK02mtPPGnpjVlnq6orhz4Zj0u',
+              callback: successCallback,
+              'expired-callback': expiredRecaptchaCallback,
+            });
+
+            const submitButton = document.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+            }
+        }
+
+        window.onLoadCallBack = onLoadCallBack;
+      </script>
+      <script src="https://www.google.com/recaptcha/api.js?onload=onLoadCallBack&amp;render=explicit"></script>
+      <div id ="captcha" class="imageContainer">
+        <div class="form-group">
+          <div id="divrecapsign" class="g-recaptcha" data-callback="successCallback" data-expired-callback="expiredRecaptchaCallback"></div>
+          <input class="form-control d-none" id="g-recaptcha-response" name="g-recaptcha-response" data-recaptcha="true"/>
+          <div class="help-block with-errors" id="err" style='color: red'></div>
+        </div>
+      </div>
+    </xpath>
+  </template> -->
+
+</odoo>
