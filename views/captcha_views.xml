@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-  <!--log in page-->
+  <!-- Login Page -->
   <template id="login" inherit_id="web.login" name="Login Inherit">
     <div class="form-group field-password" position="after">
+      <t t-set="site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('darb_login_signup_recaptcha.site_key')" />
       <script>
         function successCallback(token) {
           console.log('reCAPTCHA Token:', token);
@@ -28,46 +29,36 @@
           }
         }
 
-        function onLoadCallBack () {
-          fetch('/get_site_key')
-            .then(function(response) {
-              return response.json();
-            })
+        function onLoadCallBack() {
+          grecaptcha.render('divrecaplog', {
+              sitekey: '<t t-esc="site_key"/>',
+              callback: successCallback,
+              'expired-callback': expiredRecaptchaCallback,
+          });
 
-            .then(function(data) {
-              grecaptcha.render('divrecaplog', {
-                  sitekey: data.sitekey,
-                  callback: successCallback,
-                  'expired-callback': expiredRecaptchaCallback,
-              });
-
-              const submitButton = document.querySelector('button[type="submit"]');
-              if (submitButton) {
-                  submitButton.disabled = true;
-              }
-            });
-
-            .catch(function(error) {
-                console.error('Error fetching site key:', error);
-            });
+          const submitButton = document.querySelector('button[type="submit"]');
+          if (submitButton) {
+              submitButton.disabled = true;
+          }
         }
         window.onLoadCallBack = onLoadCallBack;
       </script>
 
       <script src="https://www.google.com/recaptcha/api.js?onload=onLoadCallBack&amp;render=explicit"></script>
-      <div id ="captcha" class="imageContainer">
+      <div id="captcha" class="imageContainer">
         <div class="form-group">
           <div id="divrecaplog" class="g-recaptcha" data-callback="successCallback" data-expired-callback="expiredRecaptchaCallback"></div>
           <input class="form-control d-none" type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"/>
-          <div class="help-block with-errors" id="err" style='color: red'></div>
+          <div class="help-block with-errors" id="err" style="color: red"></div>
         </div>
       </div>
     </div>
   </template>
 
   <!-- sign up page-->
-  <!-- <template id="signup" inherit_id="auth_signup.fields" name="Signup Inherit">
+  <template id="signup" inherit_id="auth_signup.fields" name="Signup Inherit">
     <xpath expr="//div[@class='form-group field-confirm_password']" position="after">
+      <t t-set="site_key" t-value="request.env['ir.config_parameter'].sudo().get_param('darb_login_signup_recaptcha.site_key')" />
       <script>
         function successCallback(token) {
           console.log('reCAPTCHA Token:', token); 
@@ -95,7 +86,8 @@
 
         function onLoadCallBack () {
             grecaptcha.render('divrecapsign', {
-              sitekey:'6Le5nMQUAAAAALpK02mtPPGnpjVlnq6orhz4Zj0u',
+              <!-- sitekey:'<t t-esc="site_key"/>', -->
+              sitekey:'<t t-esc="site_key"/>',
               callback: successCallback,
               'expired-callback': expiredRecaptchaCallback,
             });
@@ -117,6 +109,6 @@
         </div>
       </div>
     </xpath>
-  </template> -->
+  </template>
 
 </odoo>
